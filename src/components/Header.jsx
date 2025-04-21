@@ -1,18 +1,102 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
 export default function Header() {
-    return (
-      <header className="bg-gray-800 text-white p-4">
-        <div className="container mx-auto flex justify-between">
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <header className="bg-gray-800 text-white p-4">
+      <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-xl font-bold">
-  <a href="/" className="hover:underline">JB Store</a>
-</h1>
-          <nav className="space-x-4">
-            <a href="/" className="hover:underline">Inicio</a>
-            <a href="/personalizar" className="hover:underline">Personalizar</a>
-            <a href="/productos" className="hover:underline">Productos</a>
-            <a href="/checkout" className="hover:underline">Checkout</a>
-          </nav>
+          <Link to="/" className="hover:underline">
+            JB Store
+          </Link>
+        </h1>
+
+        {/* Menú de navegación en pantallas grandes */}
+        <nav className="space-x-4 hidden md:flex">
+          <Link to="/" className="hover:underline" aria-label="Ir al inicio">
+            Inicio
+          </Link>
+          <Link
+            to="/personalizar"
+            className="hover:underline"
+            aria-label="Ir a la página de personalización"
+          >
+            Personalizar
+          </Link>
+          <Link
+            to="/productos"
+            className="hover:underline"
+            aria-label="Ver productos"
+          >
+            Productos
+          </Link>
+          <Link
+            to="/checkout"
+            className="hover:underline"
+            aria-label="Ir a la página de checkout"
+          >
+            Checkout
+          </Link>
+        </nav>
+
+        {/* Botón de menú hamburguesa para dispositivos móviles */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden text-white focus:outline-none"
+          aria-label="Abrir menú de navegación"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      {/* Menú de navegación en pantallas pequeñas */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-gray-800 text-white">
+          <Link
+            to="/"
+            className="block p-2 text-white hover:bg-gray-700"
+            aria-label="Ir al inicio"
+          >
+            Inicio
+          </Link>
+          <Link
+            to="/personalizar"
+            className="block p-2 text-white hover:bg-gray-700"
+            aria-label="Ir a la página de personalización"
+          >
+            Personalizar
+          </Link>
+          <Link
+            to="/productos"
+            className="block p-2 text-white hover:bg-gray-700"
+            aria-label="Ver productos"
+          >
+            Productos
+          </Link>
+          <Link
+            to="/checkout"
+            className="block p-2 text-white hover:bg-gray-700"
+            aria-label="Ir a la página de checkout"
+          >
+            Checkout
+          </Link>
         </div>
-      </header>
-    );
-  }
-  
+      )}
+    </header>
+  );
+}
