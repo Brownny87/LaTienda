@@ -291,8 +291,8 @@ function Crear() {
         <label className="block font-medium mb-1">Posición X (%):</label>
         <input
           type="range"
-          min={0}
-          max={100}
+          min={30}
+          max={70}
           value={posX}
           onChange={(e) => setPosX(Number(e.target.value))}
           className="w-full mb-2"
@@ -301,8 +301,8 @@ function Crear() {
         <label className="block font-medium mb-1">Posición Y (%):</label>
         <input
           type="range"
-          min={0}
-          max={100}
+          min={20}
+          max={80}
           value={posY}
           onChange={(e) => setPosY(Number(e.target.value))}
           className="w-full mb-2"
