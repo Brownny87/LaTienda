@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const images = [
   "/LaTienda/Data-img/Home/1.png",
@@ -13,6 +14,7 @@ const images = [
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,7 +51,7 @@ export default function Home() {
         whileHover={{ scale: 1.1, rotate: [-2, 2, -2] }}
         whileTap={{ scale: 0.95 }}
         className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full text-lg font-semibold shadow-xl flex items-center justify-center gap-2"
-        onClick={() => (window.location.href = "/LaTienda/personalizar")}
+        onClick={() => navigate("/personalizar")}
       >
         <Sparkles className="w-6 h-6" />
         Personaliza tu prenda
