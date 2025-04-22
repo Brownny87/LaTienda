@@ -6,9 +6,9 @@ import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const images = [
-  "/Data-img/Home/1.png",
-  "/Data-img/Home/2.png",
-  "/Data-img/Home/3.png",
+  "/LaTienda/Data-img/Home/1.png",
+  "/LaTienda/Data-img/Home/2.png",
+  "/LaTienda/Data-img/Home/3.png",
 ];
 
 export default function Home() {
@@ -49,7 +49,7 @@ export default function Home() {
         whileHover={{ scale: 1.1, rotate: [-2, 2, -2] }}
         whileTap={{ scale: 0.95 }}
         className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full text-lg font-semibold shadow-xl flex items-center justify-center gap-2"
-        onClick={() => (window.location.href = "/personalizar")}
+        onClick={() => (window.location.href = "/LaTienda/personalizar")}
       >
         <Sparkles className="w-6 h-6" />
         Personaliza tu prenda

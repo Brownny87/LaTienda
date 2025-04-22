@@ -112,8 +112,8 @@ function Crear() {
     alert("Diseño guardado exitosamente");
   };
 
-  const imagenBase = `/Img-Bases/${tipo}-${color}.png`;
-  const imagenEstampa = `/Disenos/${estampasFiltradas[estampaIndex]?.nombre}.png`;
+  const imagenBase = `/LaTienda/Img-Bases/${tipo}-${color}.png`;
+  const imagenEstampa = `/LaTienda/Disenos/${estampasFiltradas[estampaIndex]?.nombre}.png`;
 
   const contenidoSobrePrenda = () => {
     if (modo === "imagen") {
@@ -172,7 +172,9 @@ function Crear() {
             onChange={(e) => setTipo(e.target.value)}
           >
             {tipos.map((t) => (
-              <option key={t.id} value={t.id}>{t.label}</option>
+              <option key={t.id} value={t.id}>
+                {t.label}
+              </option>
             ))}
           </select>
         </div>
@@ -212,7 +214,9 @@ function Crear() {
             onChange={(e) => setMaterial(e.target.value)}
           >
             {materiales.map((m) => (
-              <option key={m} value={m}>{m}</option>
+              <option key={m} value={m}>
+                {m}
+              </option>
             ))}
           </select>
         </div>
@@ -225,7 +229,9 @@ function Crear() {
             onChange={(e) => setTalla(e.target.value)}
           >
             {tallas.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>
+                {t}
+              </option>
             ))}
           </select>
         </div>
@@ -383,16 +389,41 @@ function Crear() {
 
       {/* Resumen de la selección */}
       <div className="md:col-span-3 mt-6 p-4 bg-gray-200 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">Resumen de tu configuración:</h3>
-        <p><strong>Tipo de prenda:</strong> {tipo}</p>
-        <p><strong>Color:</strong> {color}</p>
-        <p><strong>Material:</strong> {material}</p>
-        <p><strong>Talla:</strong> {talla}</p>
-        <p><strong>Cantidad:</strong> {cantidad}</p>
-        <p><strong>Diseño:</strong> {modo === "imagen" ? (usarPersonalizada ? "Imagen personalizada" : estampasFiltradas[estampaIndex]?.nombre) : texto}</p>
-        <p><strong>Posición X:</strong> {posX}%</p>
-        <p><strong>Posición Y:</strong> {posY}%</p>
-        <p><strong>Tamaño:</strong> {tamano}px</p>
+        <h3 className="text-xl font-semibold mb-4">
+          Resumen de tu configuración:
+        </h3>
+        <p>
+          <strong>Tipo de prenda:</strong> {tipo}
+        </p>
+        <p>
+          <strong>Color:</strong> {color}
+        </p>
+        <p>
+          <strong>Material:</strong> {material}
+        </p>
+        <p>
+          <strong>Talla:</strong> {talla}
+        </p>
+        <p>
+          <strong>Cantidad:</strong> {cantidad}
+        </p>
+        <p>
+          <strong>Diseño:</strong>{" "}
+          {modo === "imagen"
+            ? usarPersonalizada
+              ? "Imagen personalizada"
+              : estampasFiltradas[estampaIndex]?.nombre
+            : texto}
+        </p>
+        <p>
+          <strong>Posición X:</strong> {posX}%
+        </p>
+        <p>
+          <strong>Posición Y:</strong> {posY}%
+        </p>
+        <p>
+          <strong>Tamaño:</strong> {tamano}px
+        </p>
       </div>
     </div>
   );
