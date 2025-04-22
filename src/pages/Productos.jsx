@@ -18,7 +18,7 @@ export default function Productos() {
     {
       title: "Diseña el tuyo",
       img: "/LaTienda/Data-img/Productos/14.png",
-      link: "/personalizar",
+      link: "/LaTienda/personalizar",
     },
   ];
 

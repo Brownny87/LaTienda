@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const images = [
-  "/LaTienda/Data-img/Home/1.png",
-  "/LaTienda/Data-img/Home/2.png",
-  "/LaTienda/Data-img/Home/3.png",
+  `${import.meta.env.BASE_URL}Data-img/Home/1.png`,
+  `${import.meta.env.BASE_URL}Data-img/Home/2.png`,
+  `${import.meta.env.BASE_URL}Data-img/Home/3.png`,
 ];
 
 export default function Home() {
