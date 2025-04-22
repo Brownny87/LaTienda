@@ -7,22 +7,23 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@vitejs/plugin-react": "^4.4.1",
     "framer-motion": "^12.7.4",
     "gh-pages": "^6.3.0",
     "lucide-react": "^0.488.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.1",
-    "react-scripts": "5.0.1",
+    "vite": "^6.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "start": "vite", // Usar vite para iniciar el desarrollo
+    "build": "vite build", // Usar vite para construir el proyecto
+    "test": "react-scripts test", // Si usas pruebas con testing-library
+    "eject": "react-scripts eject", // Si decides usar eject
+    "predeploy": "npm run build", // Prepara para el despliegue
+    "deploy": "gh-pages -d dist" // Desplegar el directorio de salida de Vite
   },
   "eslintConfig": {
     "extends": [
