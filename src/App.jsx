@@ -1,13 +1,12 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Personalizar from "./pages/Personalizar";
 import Productos from "./pages/Productos";
 import Checkout from "./pages/Checkout";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 
 export default function App() {
-  // Detectar si está en producción para usar basename
   const base = process.env.NODE_ENV === "production" ? "/LaTienda" : "";
 
   return (
