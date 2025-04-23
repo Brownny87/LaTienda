@@ -39,6 +39,22 @@ export default function Header() {
           >
             Checkout
           </Link>
+
+          {/* Enlaces de Login y Register */}
+          <Link
+            to="/login"
+            className="hover:underline"
+            aria-label="Iniciar sesión"
+          >
+            Iniciar Sesión
+          </Link>
+          <Link
+            to="/register"
+            className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition"
+            aria-label="Registrarse"
+          >
+            Registrarse
+          </Link>
         </nav>
 
         {/* Botón de menú hamburguesa para dispositivos móviles */}
@@ -94,6 +110,22 @@ export default function Header() {
             aria-label="Ir a la página de checkout"
           >
             Checkout
+          </Link>
+
+          {/* Enlaces de Login y Register en el menú móvil */}
+          <Link
+            to="/login"
+            className="block p-2 text-white hover:bg-gray-700"
+            aria-label="Iniciar sesión"
+          >
+            Iniciar Sesión
+          </Link>
+          <Link
+            to="/register"
+            className="block p-2 bg-purple-600 text-white hover:bg-purple-700"
+            aria-label="Registrarse"
+          >
+            Registrarse
           </Link>
         </div>
       )}

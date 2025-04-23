@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,8 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const navigate = useNavigate(); // Usar el hook de navegación para redirigir
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,6 +20,8 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Activar el estado de carga
+
     const response = await fetch("http://localhost:5000/api/auth/register", {
       method: "POST",
       headers: {
@@ -24,9 +29,13 @@ const Register = () => {
       },
       body: JSON.stringify(formData),
     });
+
     const data = await response.json();
+    setLoading(false); // Desactivar el estado de carga
+
     if (data.success) {
-      alert("Registro exitoso");
+      alert("Registro exitoso, por favor inicia sesión.");
+      navigate("/login"); // Redirigir al login
     } else {
       alert("Error al registrar usuario");
     }
@@ -91,8 +100,9 @@ const Register = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300"
+            disabled={loading} // Deshabilitar el botón mientras se está cargando
           >
-            Registrarse
+            {loading ? "Cargando..." : "Registrarse"} {/* Mensaje de carga */}
           </button>
         </form>
       </div>

@@ -6,6 +6,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState(null); // Estado para manejar el error
+  const [loading, setLoading] = useState(false); // Estado de carga
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,6 +20,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Activar el estado de carga
+
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: {
@@ -25,12 +29,15 @@ const Login = () => {
       },
       body: JSON.stringify(formData),
     });
+
     const data = await response.json();
+    setLoading(false); // Desactivar el estado de carga
+
     if (data.token) {
       localStorage.setItem("token", data.token);
       navigate("/dashboard"); // Redirigir al dashboard o página principal
     } else {
-      alert("Error al iniciar sesión");
+      setError("Error al iniciar sesión, verifica tus credenciales"); // Mostrar mensaje de error
     }
   };
 
@@ -73,11 +80,15 @@ const Login = () => {
               required
             />
           </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
+          {/* Mostrar error */}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300"
+            disabled={loading} // Deshabilitar el botón mientras se está cargando
           >
-            Iniciar sesión
+            {loading ? "Cargando..." : "Iniciar sesión"}{" "}
+            {/* Mensaje de carga */}
           </button>
         </form>
       </div>
