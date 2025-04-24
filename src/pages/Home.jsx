@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const images = [
-  process.env.PUBLIC_URL + "/Data-img/Home/1.png",
-  process.env.PUBLIC_URL + "/Data-img/Home/2.png",
-  process.env.PUBLIC_URL + "/Data-img/Home/3.png",
+  "/Data-img/Home/1.png",
+  "/Data-img/Home/2.png",
+  "/Data-img/Home/3.png",
 ];
 
 export default function Home() {
@@ -50,7 +50,7 @@ export default function Home() {
       <motion.button
         whileHover={{ scale: 1.1, rotate: [-2, 2, -2] }}
         whileTap={{ scale: 0.95 }}
-        className="mt-10 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full text-lg font-semibold shadow-xl flex items-center justify-center gap-2"
+        className="mt-100 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full text-lg font-semibold shadow-xl flex items-center justify-center gap-2"
         onClick={() => navigate("/personalizar")}
       >
         <Sparkles className="w-6 h-6" />

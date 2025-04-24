@@ -109,23 +109,22 @@ export default function Header() {
             className="block p-2 text-white hover:bg-gray-700"
             aria-label="Ir a la página de checkout"
           >
+            {/* Enlaces de Login y Register en el menú móvil */}
+            <Link
+              to="/login"
+              className="block p-2 text-white hover:bg-gray-700"
+              aria-label="Iniciar sesión"
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              to="/register"
+              className="block p-2 bg-purple-600 text-white hover:bg-purple-700"
+              aria-label="Registrarse"
+            >
+              Registrarse
+            </Link>
             Checkout
-          </Link>
-
-          {/* Enlaces de Login y Register en el menú móvil */}
-          <Link
-            to="/login"
-            className="block p-2 text-white hover:bg-gray-700"
-            aria-label="Iniciar sesión"
-          >
-            Iniciar Sesión
-          </Link>
-          <Link
-            to="/register"
-            className="block p-2 bg-purple-600 text-white hover:bg-purple-700"
-            aria-label="Registrarse"
-          >
-            Registrarse
           </Link>
         </div>
       )}
