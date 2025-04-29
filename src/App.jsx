@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Personalizar from "./pages/Personalizar";
 import Productos from "./pages/Productos";
 import Checkout from "./pages/Checkout";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 export default function App() {
   const base = process.env.NODE_ENV === "production" ? "/LaTienda" : "";
@@ -19,6 +21,8 @@ export default function App() {
             <Route path="/personalizar" element={<Personalizar />} />
             <Route path="/productos" element={<Productos />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
           </Routes>
         </main>
 
