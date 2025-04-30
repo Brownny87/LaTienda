@@ -5,12 +5,11 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import img1 from "../assets/Data-img/Home/1.png";
+import img2 from "../assets/Data-img/Home/2.png";
+import img3 from "../assets/Data-img/Home/3.png";
 
-const images = [
-  "/Data-img/Home/1.png",
-  "/Data-img/Home/2.png",
-  "/Data-img/Home/3.png",
-];
+const images = [img1, img2, img3];
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
