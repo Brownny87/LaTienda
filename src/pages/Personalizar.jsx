@@ -163,7 +163,8 @@ function Crear() {
         <h1 className="text-2xl font-bold mb-6">Personaliza tu prenda</h1>
       </div>
       {/* Izquierda */}
-      <div className="space-y-4">
+
+      <div className="space-y-4 bg-gray-100 p-4 rounded-xl">
         <div>
           <label className="block font-medium mb-1">Tipo de prenda:</label>
           <select
@@ -287,7 +288,7 @@ function Crear() {
       </div>
 
       {/* Derecha */}
-      <div>
+      <div className="bg-gray-100 p-4 rounded-xl space-y-4">
         <label className="block font-medium mb-1">Posición X (%):</label>
         <input
           type="range"
