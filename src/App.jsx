@@ -13,9 +13,9 @@ export default function App() {
 
   return (
     <Router basename={base}>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-gray-50 font-sans text-gray-900">
         <Header />
-        <main className="flex-1">
+        <main className="flex-1 pt-16">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/personalizar" element={<Personalizar />} />
@@ -26,16 +26,20 @@ export default function App() {
           </Routes>
         </main>
 
-        {/* Botón flotante de WhatsApp */}
+        {/* Botón flotante de WhatsApp Mejorado */}
         <a
           href="https://wa.me/573105128801?text=Hola%20Brownny%20Store%2C%20quiero%20más%20información%20sobre%20las%20prendas%20personalizadas"
-          className="fixed bottom-24 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 z-50"
+          className="fixed bottom-8 right-8 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-2xl flex items-center justify-center z-50 transition-all duration-300 hover:scale-110 group"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Contactar por WhatsApp"
         >
+          <span className="absolute right-full mr-4 bg-white text-gray-800 px-3 py-1 rounded-lg shadow-md text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            ¡Escríbenos!
+          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-8 w-8"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
