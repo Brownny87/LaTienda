@@ -564,7 +564,7 @@ function Personalizar() {
                  />
 
                  {/* Capas de Diseño */}
-                 <div className="absolute inset-0 z-20 overflow-hidden" style={{ transform: "translateZ(1px)" }}>
+                 <div className="absolute inset-0 z-20 overflow-hidden" style={{ transform: `translateZ(${vista === 'espalda' ? -1 : 1}px)` }}>
                     {capas.filter(c => c.vista === vista).map((capa) => (
                       <div key={capa.id} className="absolute inset-0">
                         {capa.tipo === 'imagen' ? (
@@ -775,16 +775,23 @@ function Personalizar() {
                     <GripHorizontal size={16} />
                 </div>
 
-                <button onClick={handleReset} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-50" title="Restablecer posición">
+                <button 
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={handleReset} 
+                    className="p-1.5 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-50" 
+                    title="Restablecer posición"
+                >
                     <LayoutTemplate size={14} />
                 </button>
                 <button 
+                    onPointerDown={(e) => e.stopPropagation()}
                     onClick={(e) => { e.stopPropagation(); setIsMobileControlsMinimized(!isMobileControlsMinimized); }}
                     className="p-1.5 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200"
                 >
                     {isMobileControlsMinimized ? <Maximize2 size={14}/> : <Minimize2 size={14}/>}
                 </button>
                 <button 
+                    onPointerDown={(e) => e.stopPropagation()}
                     onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(null); }}
                     className="p-1.5 bg-red-50 rounded-full text-red-500 hover:bg-red-100"
                 >
