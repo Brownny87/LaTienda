@@ -510,7 +510,7 @@ function Personalizar() {
                onClick={() => setVista('frente')}
                className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'frente' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
-               Frente
+               Adelante
              </button>
              <button 
                onClick={() => setVista('espalda')}
@@ -519,22 +519,16 @@ function Personalizar() {
                Espalda
              </button>
              <button 
-               onClick={() => setVista('hombro_der')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'hombro_der' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+               onClick={() => setVista('manga_der')}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'manga_der' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
-               Hombro Der.
+               Manga Derecha
              </button>
              <button 
-               onClick={() => setVista('hombro_izq')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'hombro_izq' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+               onClick={() => setVista('manga_izq')}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'manga_izq' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
-               Hombro Izq.
-             </button>
-             <button 
-               onClick={() => setVista('manga')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'manga' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
-             >
-               Manga
+               Manga Izquierda
              </button>
           </div>
 
@@ -544,10 +538,9 @@ function Personalizar() {
                 className="relative w-full h-full flex items-center justify-center"
                 animate={{ 
                   rotateY: vista === 'espalda' ? 180 : 
-                           vista === 'hombro_der' ? -25 :
-                           vista === 'hombro_izq' ? 25 : 0,
-                  scale: vista === 'manga' ? 1.5 : 
-                         (vista === 'hombro_der' || vista === 'hombro_izq') ? 1.2 : 1
+                           vista === 'manga_der' ? -25 :
+                           vista === 'manga_izq' ? 25 : 0,
+                  scale: (vista === 'manga_der' || vista === 'manga_izq') ? 1.5 : 1
                 }}
                 transition={{ duration: 0.6, type: "spring" }}
                 style={{ transformStyle: "preserve-3d" }}
