@@ -19,9 +19,11 @@ import {
   Minimize2,
   Maximize2,
   Move,
+  GripHorizontal,
+  LayoutTemplate,
   X
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useDragControls } from "framer-motion";
 
 function Personalizar() {
   // --- ESTADOS ---
@@ -52,6 +54,7 @@ function Personalizar() {
   const [resetKey, setResetKey] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 }); // Para posición libre
   const movementInterval = useRef(null);
+  const dragControls = useDragControls();
 
   const handleReset = () => {
     setDocking({ mode: 'vertical', anchor: 'bottom-right' });
@@ -730,6 +733,8 @@ function Personalizar() {
         <motion.div
             key={resetKey}
             drag
+            dragControls={dragControls}
+            dragListener={false}
             dragMomentum={false}
             onDragEnd={handleDragEnd}
             initial={docking.anchor === 'custom' ? { x: position.x, y: position.y } : { x: 0, y: 0 }}
@@ -741,19 +746,27 @@ function Personalizar() {
                 'bottom-20 right-4 flex-col items-end'
             }`}
         >
-            {/* Header del panel flotante */}
-            <div className="bg-white border border-gray-200 rounded-full shadow-md p-1 mb-2 flex items-center space-x-2 cursor-grab active:cursor-grabbing">
-                <button onClick={handleReset} className="p-1 text-gray-400 hover:text-indigo-600" title="Restablecer posición">
-                    <Move size={14} />
+            {/* Header del panel flotante - DRAG HANDLE */}
+            <div 
+                onPointerDown={(e) => dragControls.start(e)}
+                className="bg-white border border-gray-200 rounded-full shadow-md p-1 mb-2 flex items-center space-x-1 cursor-grab active:cursor-grabbing touch-none select-none"
+            >
+                {/* Drag Handle Icon */}
+                <div className="px-2 py-1 text-gray-400 hover:text-gray-600 border-r border-gray-100 mr-1 flex items-center">
+                    <GripHorizontal size={16} />
+                </div>
+
+                <button onClick={handleReset} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-50" title="Restablecer posición">
+                    <LayoutTemplate size={14} />
                 </button>
                 <button 
-                    onClick={() => setIsMobileControlsMinimized(!isMobileControlsMinimized)}
+                    onClick={(e) => { e.stopPropagation(); setIsMobileControlsMinimized(!isMobileControlsMinimized); }}
                     className="p-1.5 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200"
                 >
                     {isMobileControlsMinimized ? <Maximize2 size={14}/> : <Minimize2 size={14}/>}
                 </button>
                 <button 
-                    onClick={() => setCapaSeleccionada(null)}
+                    onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(null); }}
                     className="p-1.5 bg-red-50 rounded-full text-red-500 hover:bg-red-100"
                 >
                     <X size={14}/>
