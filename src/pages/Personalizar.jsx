@@ -283,20 +283,24 @@ function Personalizar() {
   const capaActiva = capas.find(c => c.id === capaSeleccionada) || { tamano: 100, rotacion: 0 };
 
   // Render del Joystick (Reutilizable)
-  const renderJoystick = () => (
-    <div className={`grid grid-cols-3 gap-2 p-2 bg-gray-50 rounded-full shadow-inner border border-gray-200 select-none ${docking.mode === 'horizontal' ? 'scale-90' : 'scale-90 sm:scale-100'}`}>
-      <div className="w-10 h-10"></div>
+  const renderJoystick = () => {
+    const btnSize = docking.mode === 'horizontal' ? 'w-8 h-8' : 'w-10 h-10';
+    const iconSize = docking.mode === 'horizontal' ? 16 : 18;
+    
+    return (
+    <div className={`grid grid-cols-3 ${docking.mode === 'horizontal' ? 'gap-1 p-1' : 'gap-2 p-2'} bg-gray-50 rounded-full shadow-inner border border-gray-200 select-none ${docking.mode === 'horizontal' ? 'scale-90' : 'scale-90 sm:scale-100'}`}>
+      <div className={btnSize}></div>
       <button 
         onMouseDown={() => startMoving('up')} 
         onMouseUp={stopMoving} 
         onMouseLeave={stopMoving}
         onTouchStart={(e) => { e.preventDefault(); startMoving('up'); }}
         onTouchEnd={stopMoving}
-        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+        className={`${btnSize} bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform`}
       >
-        <ArrowUp size={18}/>
+        <ArrowUp size={iconSize}/>
       </button>
-      <div className="w-10 h-10"></div>
+      <div className={btnSize}></div>
       
       <button 
         onMouseDown={() => startMoving('left')} 
@@ -304,11 +308,11 @@ function Personalizar() {
         onMouseLeave={stopMoving}
         onTouchStart={(e) => { e.preventDefault(); startMoving('left'); }}
         onTouchEnd={stopMoving}
-        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+        className={`${btnSize} bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform`}
       >
-        <ArrowLeft size={18}/>
+        <ArrowLeft size={iconSize}/>
       </button>
-      <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+      <div className={`${btnSize} bg-gray-200 rounded-full flex items-center justify-center`}>
         <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
       </div>
       <button 
@@ -317,52 +321,52 @@ function Personalizar() {
         onMouseLeave={stopMoving}
         onTouchStart={(e) => { e.preventDefault(); startMoving('right'); }}
         onTouchEnd={stopMoving}
-        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+        className={`${btnSize} bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform`}
       >
-        <ArrowRight size={18}/>
+        <ArrowRight size={iconSize}/>
       </button>
       
-      <div className="w-10 h-10"></div>
+      <div className={btnSize}></div>
       <button 
         onMouseDown={() => startMoving('down')} 
         onMouseUp={stopMoving} 
         onMouseLeave={stopMoving}
         onTouchStart={(e) => { e.preventDefault(); startMoving('down'); }}
         onTouchEnd={stopMoving}
-        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+        className={`${btnSize} bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform`}
       >
-        <ArrowDown size={18}/>
+        <ArrowDown size={iconSize}/>
       </button>
-      <div className="w-10 h-10"></div>
+      <div className={btnSize}></div>
     </div>
-  );
+  )};
 
   // Render de Sliders (Reutilizable)
   const renderSliders = () => (
-    <div className={`bg-gray-50 p-3 rounded-lg ${docking.mode === 'horizontal' ? 'flex items-center space-x-4 flex-1' : 'space-y-3'}`}>
-      <div className={`flex items-center space-x-2 ${docking.mode === 'horizontal' ? 'flex-1' : ''}`}>
-         <ZoomOut size={16} className="text-gray-400"/>
+    <div className="bg-gray-50 p-3 rounded-lg space-y-3 w-full">
+      <div className="flex items-center space-x-2">
+         <ZoomOut size={16} className="text-gray-400 flex-shrink-0"/>
          <input 
            type="range" 
            min={capaActiva.tipo === 'texto' ? "10" : "50"} 
            max={capaActiva.tipo === 'texto' ? "100" : "300"} 
            value={capaActiva.tamano} 
            onChange={(e) => actualizarCapa({ tamano: Number(e.target.value) })} 
-           className="flex-1 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+           className="flex-1 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-indigo-600 min-w-[100px]"
          />
-         <ZoomIn size={16} className="text-gray-400"/>
+         <ZoomIn size={16} className="text-gray-400 flex-shrink-0"/>
       </div>
-      <div className={`flex items-center space-x-2 ${docking.mode === 'horizontal' ? 'flex-1' : ''}`}>
-         <RotateCw size={16} className="text-gray-400"/>
+      <div className="flex items-center space-x-2">
+         <RotateCw size={16} className="text-gray-400 flex-shrink-0"/>
          <input 
            type="range" 
            min="0" 
            max="360" 
            value={capaActiva.rotacion} 
            onChange={(e) => actualizarCapa({ rotacion: Number(e.target.value) })} 
-           className="flex-1 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+           className="flex-1 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-indigo-600 min-w-[100px]"
          />
-         <span className="text-xs text-gray-500 w-8 text-right">{capaActiva.rotacion}°</span>
+         <span className="text-xs text-gray-500 w-8 text-right flex-shrink-0">{capaActiva.rotacion}°</span>
       </div>
     </div>
   );
@@ -759,19 +763,40 @@ function Personalizar() {
             {/* Contenido del panel */}
             {!isMobileControlsMinimized ? (
                 <div className={`bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 fade-in duration-300 ${
-                    docking.mode === 'horizontal' ? 'w-full max-w-lg flex flex-row items-center justify-between gap-4' : 'w-64'
+                    docking.mode === 'horizontal' ? 'w-[90vw] max-w-md flex flex-row items-center gap-3' : 'w-64 flex flex-col'
                 }`}>
-                    <div className={`flex justify-center ${docking.mode === 'horizontal' ? '' : 'mb-4'}`}>
-                        {renderJoystick()}
-                    </div>
-                    {renderSliders()}
-                    <button 
-                        onClick={() => eliminarCapa(capaSeleccionada)}
-                        className={`${docking.mode === 'horizontal' ? 'p-3 rounded-full' : 'w-full mt-3 py-2 rounded-lg'} bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center hover:bg-red-100 active:bg-red-200`}
-                    >
-                        <Trash2 size={14} className={docking.mode === 'horizontal' ? '' : 'mr-1'}/> 
-                        {docking.mode !== 'horizontal' && 'Eliminar Capa'}
-                    </button>
+                    {docking.mode === 'horizontal' ? (
+                        <>
+                            {/* Lado Izquierdo: Sliders + Eliminar */}
+                            <div className="flex-1 flex flex-col gap-2 min-w-0">
+                                {renderSliders()}
+                                <button 
+                                    onClick={() => eliminarCapa(capaSeleccionada)}
+                                    className="p-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center hover:bg-red-100 active:bg-red-200"
+                                >
+                                    <Trash2 size={14} className="mr-1"/> Eliminar
+                                </button>
+                            </div>
+                            
+                            {/* Lado Derecho: Joystick */}
+                            <div className="flex-shrink-0">
+                                {renderJoystick()}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="flex justify-center mb-4">
+                                {renderJoystick()}
+                            </div>
+                            {renderSliders()}
+                            <button 
+                                onClick={() => eliminarCapa(capaSeleccionada)}
+                                className="w-full mt-3 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center hover:bg-red-100 active:bg-red-200"
+                            >
+                                <Trash2 size={14} className="mr-1"/> Eliminar Capa
+                            </button>
+                        </>
+                    )}
                 </div>
             ) : (
                 <div className="bg-white p-2 rounded-full shadow-lg border border-gray-200">
