@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 export default function App() {
-  const base = process.env.NODE_ENV === "production" ? "/LaTienda" : "";
+  const base = import.meta.env.BASE_URL.replace(/\/$/, ""); // Eliminar slash final si existe para evitar doble slash
 
   return (
     <Router basename={base}>
