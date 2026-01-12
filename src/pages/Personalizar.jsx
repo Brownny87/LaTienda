@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Save,
   RefreshCcw,
@@ -13,12 +13,13 @@ import {
   Type,
   Upload,
   Shirt,
-  Palette,
-  ShoppingCart,
-  DollarSign,
   Layers,
   Trash2,
-  Plus
+  Plus,
+  Minimize2,
+  Maximize2,
+  Move,
+  X
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -44,6 +45,52 @@ function Personalizar() {
   // General
   const [nombreDiseno, setNombreDiseno] = useState("");
   const [precioTotal, setPrecioTotal] = useState(0);
+
+  // Mobile Floating Controls State
+  const [isMobileControlsMinimized, setIsMobileControlsMinimized] = useState(false);
+  const [docking, setDocking] = useState({ mode: 'vertical', anchor: 'bottom-right' }); // anchor: 'top'|'bottom'|'bottom-right'|'custom'
+  const [resetKey, setResetKey] = useState(0);
+  const [position, setPosition] = useState({ x: 0, y: 0 }); // Para posición libre
+  const movementInterval = useRef(null);
+
+  const handleReset = () => {
+    setDocking({ mode: 'vertical', anchor: 'bottom-right' });
+    setPosition({ x: 0, y: 0 });
+    setResetKey(prev => prev + 1);
+    setIsMobileControlsMinimized(false);
+  };
+
+  const handleDragEnd = (event, info) => {
+    const { y, x } = info.point;
+    const height = window.innerHeight;
+    
+    // Zonas de snap (15% superior o inferior)
+    const snapThreshold = 100;
+    
+    if (y < snapThreshold) {
+        if (docking.anchor !== 'top') {
+            setDocking({ mode: 'horizontal', anchor: 'top' });
+            setResetKey(prev => prev + 1);
+        }
+    } else if (y > height - snapThreshold) {
+        if (docking.anchor !== 'bottom') {
+            setDocking({ mode: 'horizontal', anchor: 'bottom' });
+            setResetKey(prev => prev + 1);
+        }
+    } else {
+        // Si no está en zona de snap, dejarlo libre
+        // Si veníamos de un modo anclado (horizontal o vertical-esquina), cambiamos a 'custom'
+        // y guardamos la posición donde se soltó
+        if (docking.anchor !== 'custom') {
+            setDocking({ mode: 'vertical', anchor: 'custom' });
+            setPosition({ x, y });
+            // Forzamos re-render para aplicar position fixed top/left
+            setResetKey(prev => prev + 1);
+        }
+        // Si ya estábamos en 'custom', no necesitamos hacer nada, el drag de framer motion
+        // mantiene la posición visual, pero podríamos guardar el estado si quisiéramos persistencia
+    }
+  };
 
   // --- DATOS ---
   const tipos = [
@@ -117,6 +164,7 @@ function Personalizar() {
     };
     setCapas([...capas, nuevaCapa]);
     setCapaSeleccionada(nuevaCapa.id);
+    setIsMobileControlsMinimized(false);
   };
 
   // Agregar capa de imagen (subida)
@@ -137,6 +185,7 @@ function Personalizar() {
       };
       setCapas([...capas, nuevaCapa]);
       setCapaSeleccionada(nuevaCapa.id);
+      setIsMobileControlsMinimized(false);
     }
   };
 
@@ -157,6 +206,7 @@ function Personalizar() {
     setCapas([...capas, nuevaCapa]);
     setCapaSeleccionada(nuevaCapa.id);
     setTextoInput("Tu Texto");
+    setIsMobileControlsMinimized(false);
   };
 
   // Actualizar capa actual
@@ -186,21 +236,40 @@ function Personalizar() {
 
   // Joystick handlers
   const move = (direction) => {
-    if (capaSeleccionada === null) return;
-    
-    const capa = capas.find(c => c.id === capaSeleccionada);
-    if (!capa) return;
+    setCapas(prevCapas => {
+        const index = prevCapas.findIndex(c => c.id === capaSeleccionada);
+        if (index === -1) return prevCapas;
+  
+        const capa = prevCapas[index];
+        const step = 1; // Paso más pequeño para movimiento fluido
+        let { x, y } = capa;
+  
+        switch(direction) {
+          case 'up': y = Math.max(10, y - step); break;
+          case 'down': y = Math.min(90, y + step); break;
+          case 'left': x = Math.max(10, x - step); break;
+          case 'right': x = Math.min(90, x + step); break;
+        }
+        
+        const newCapas = [...prevCapas];
+        newCapas[index] = { ...capa, x, y };
+        return newCapas;
+    });
+  };
 
-    const step = 2; 
-    let { x, y } = capa;
+  const startMoving = (direction) => {
+    if (movementInterval.current) return;
+    move(direction); // Movimiento inicial
+    movementInterval.current = setInterval(() => {
+        move(direction);
+    }, 50); // 50ms para movimiento fluido
+  };
 
-    switch(direction) {
-      case 'up': y = Math.max(10, y - step); break;
-      case 'down': y = Math.min(90, y + step); break;
-      case 'left': x = Math.max(10, x - step); break;
-      case 'right': x = Math.min(90, x + step); break;
+  const stopMoving = () => {
+    if (movementInterval.current) {
+        clearInterval(movementInterval.current);
+        movementInterval.current = null;
     }
-    actualizarCapa({ x, y });
   };
 
   const getImagenBase = () => {
@@ -215,25 +284,53 @@ function Personalizar() {
 
   // Render del Joystick (Reutilizable)
   const renderJoystick = () => (
-    <div className="grid grid-cols-3 gap-2 p-2 bg-gray-50 rounded-full shadow-inner border border-gray-200 scale-90 sm:scale-100">
+    <div className={`grid grid-cols-3 gap-2 p-2 bg-gray-50 rounded-full shadow-inner border border-gray-200 select-none ${docking.mode === 'horizontal' ? 'scale-90' : 'scale-90 sm:scale-100'}`}>
       <div className="w-10 h-10"></div>
-      <button onClick={() => move('up')} className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600">
+      <button 
+        onMouseDown={() => startMoving('up')} 
+        onMouseUp={stopMoving} 
+        onMouseLeave={stopMoving}
+        onTouchStart={(e) => { e.preventDefault(); startMoving('up'); }}
+        onTouchEnd={stopMoving}
+        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+      >
         <ArrowUp size={18}/>
       </button>
       <div className="w-10 h-10"></div>
       
-      <button onClick={() => move('left')} className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600">
+      <button 
+        onMouseDown={() => startMoving('left')} 
+        onMouseUp={stopMoving} 
+        onMouseLeave={stopMoving}
+        onTouchStart={(e) => { e.preventDefault(); startMoving('left'); }}
+        onTouchEnd={stopMoving}
+        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+      >
         <ArrowLeft size={18}/>
       </button>
       <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
         <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
       </div>
-      <button onClick={() => move('right')} className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600">
+      <button 
+        onMouseDown={() => startMoving('right')} 
+        onMouseUp={stopMoving} 
+        onMouseLeave={stopMoving}
+        onTouchStart={(e) => { e.preventDefault(); startMoving('right'); }}
+        onTouchEnd={stopMoving}
+        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+      >
         <ArrowRight size={18}/>
       </button>
       
       <div className="w-10 h-10"></div>
-      <button onClick={() => move('down')} className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600">
+      <button 
+        onMouseDown={() => startMoving('down')} 
+        onMouseUp={stopMoving} 
+        onMouseLeave={stopMoving}
+        onTouchStart={(e) => { e.preventDefault(); startMoving('down'); }}
+        onTouchEnd={stopMoving}
+        className="w-10 h-10 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center hover:bg-indigo-50 active:bg-indigo-100 text-gray-600 active:scale-95 transition-transform"
+      >
         <ArrowDown size={18}/>
       </button>
       <div className="w-10 h-10"></div>
@@ -242,8 +339,8 @@ function Personalizar() {
 
   // Render de Sliders (Reutilizable)
   const renderSliders = () => (
-    <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
-      <div className="flex items-center space-x-2">
+    <div className={`bg-gray-50 p-3 rounded-lg ${docking.mode === 'horizontal' ? 'flex items-center space-x-4 flex-1' : 'space-y-3'}`}>
+      <div className={`flex items-center space-x-2 ${docking.mode === 'horizontal' ? 'flex-1' : ''}`}>
          <ZoomOut size={16} className="text-gray-400"/>
          <input 
            type="range" 
@@ -255,7 +352,7 @@ function Personalizar() {
          />
          <ZoomIn size={16} className="text-gray-400"/>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className={`flex items-center space-x-2 ${docking.mode === 'horizontal' ? 'flex-1' : ''}`}>
          <RotateCw size={16} className="text-gray-400"/>
          <input 
            type="range" 
@@ -371,7 +468,7 @@ function Personalizar() {
                  {capas.map((c, i) => (
                    <div 
                      key={c.id}
-                     onClick={() => setCapaSeleccionada(c.id)}
+                     onClick={() => { setCapaSeleccionada(c.id); setIsMobileControlsMinimized(false); }}
                      className={`flex items-center justify-between p-2 rounded-lg border cursor-pointer transition-colors ${capaSeleccionada === c.id ? 'border-indigo-500 bg-indigo-50' : 'border-gray-100 hover:bg-gray-50'}`}
                    >
                      <div className="flex items-center truncate">
@@ -458,7 +555,7 @@ function Personalizar() {
                               cursor: 'pointer',
                               pointerEvents: 'auto'
                             }}
-                            onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(capa.id); }}
+                            onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(capa.id); setIsMobileControlsMinimized(false); }}
                           />
                         ) : (
                           <motion.div
@@ -475,7 +572,7 @@ function Personalizar() {
                               cursor: 'pointer',
                               pointerEvents: 'auto'
                             }}
-                            onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(capa.id); }}
+                            onClick={(e) => { e.stopPropagation(); setCapaSeleccionada(capa.id); setIsMobileControlsMinimized(false); }}
                           >
                             {capa.contenido}
                           </motion.div>
@@ -624,25 +721,66 @@ function Personalizar() {
         </div>
       </div>
 
-      {/* CONTROLES FLOTANTES MÓVIL */}
+      {/* CONTROLES FLOTANTES MÓVIL (Draggable y Collapsible) */}
       {capaSeleccionada && (
-        <>
-            {/* Joystick Flotante (Inferior Derecha) */}
-            <div className="fixed bottom-4 right-4 md:hidden z-50 bg-white/95 backdrop-blur-sm p-2 rounded-2xl shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 fade-in duration-300">
-                {renderJoystick()}
-            </div>
-
-            {/* Sliders Flotantes (Inferior Izquierda) */}
-            <div className="fixed bottom-4 left-4 md:hidden z-50 bg-white/95 backdrop-blur-sm p-3 rounded-xl shadow-2xl border border-gray-200 w-48 animate-in slide-in-from-bottom-5 fade-in duration-300">
-                {renderSliders()}
+        <motion.div
+            key={resetKey}
+            drag
+            dragMomentum={false}
+            onDragEnd={handleDragEnd}
+            initial={docking.anchor === 'custom' ? { x: position.x, y: position.y } : { x: 0, y: 0 }}
+            style={docking.anchor === 'custom' ? { left: 0, top: 0, bottom: 'auto', right: 'auto' } : {}}
+            className={`fixed md:hidden z-50 flex ${
+                docking.anchor === 'top' ? 'top-4 left-4 right-4 flex-col items-center' :
+                docking.anchor === 'bottom' ? 'bottom-4 left-4 right-4 flex-col items-center' :
+                docking.anchor === 'custom' ? 'flex-col items-end' : // Custom position controlled by initial/style
+                'bottom-20 right-4 flex-col items-end'
+            }`}
+        >
+            {/* Header del panel flotante */}
+            <div className="bg-white border border-gray-200 rounded-full shadow-md p-1 mb-2 flex items-center space-x-2 cursor-grab active:cursor-grabbing">
+                <button onClick={handleReset} className="p-1 text-gray-400 hover:text-indigo-600" title="Restablecer posición">
+                    <Move size={14} />
+                </button>
                 <button 
-                    onClick={() => eliminarCapa(capaSeleccionada)}
-                    className="w-full mt-2 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-bold flex items-center justify-center hover:bg-red-200 active:bg-red-300"
+                    onClick={() => setIsMobileControlsMinimized(!isMobileControlsMinimized)}
+                    className="p-1.5 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200"
                 >
-                    <Trash2 size={12} className="mr-1"/> Eliminar
+                    {isMobileControlsMinimized ? <Maximize2 size={14}/> : <Minimize2 size={14}/>}
+                </button>
+                <button 
+                    onClick={() => setCapaSeleccionada(null)}
+                    className="p-1.5 bg-red-50 rounded-full text-red-500 hover:bg-red-100"
+                >
+                    <X size={14}/>
                 </button>
             </div>
-        </>
+
+            {/* Contenido del panel */}
+            {!isMobileControlsMinimized ? (
+                <div className={`bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 fade-in duration-300 ${
+                    docking.mode === 'horizontal' ? 'w-full max-w-lg flex flex-row items-center justify-between gap-4' : 'w-64'
+                }`}>
+                    <div className={`flex justify-center ${docking.mode === 'horizontal' ? '' : 'mb-4'}`}>
+                        {renderJoystick()}
+                    </div>
+                    {renderSliders()}
+                    <button 
+                        onClick={() => eliminarCapa(capaSeleccionada)}
+                        className={`${docking.mode === 'horizontal' ? 'p-3 rounded-full' : 'w-full mt-3 py-2 rounded-lg'} bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center hover:bg-red-100 active:bg-red-200`}
+                    >
+                        <Trash2 size={14} className={docking.mode === 'horizontal' ? '' : 'mr-1'}/> 
+                        {docking.mode !== 'horizontal' && 'Eliminar Capa'}
+                    </button>
+                </div>
+            ) : (
+                <div className="bg-white p-2 rounded-full shadow-lg border border-gray-200">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-xs">
+                        {capas.find(c => c.id === capaSeleccionada)?.tipo === 'imagen' ? <ImageIcon size={16}/> : <Type size={16}/>}
+                    </div>
+                </div>
+            )}
+        </motion.div>
       )}
 
     </div>
