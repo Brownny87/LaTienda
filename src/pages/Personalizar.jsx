@@ -247,11 +247,15 @@ function Personalizar() {
         const step = 1; // Paso más pequeño para movimiento fluido
         let { x, y } = capa;
   
+        // Invertir controles horizontales si estamos en vista de espalda
+        const isBack = vista === 'espalda';
+        const horizontalStep = isBack ? -step : step;
+
         switch(direction) {
           case 'up': y = Math.max(10, y - step); break;
           case 'down': y = Math.min(90, y + step); break;
-          case 'left': x = Math.max(10, x - step); break;
-          case 'right': x = Math.min(90, x + step); break;
+          case 'left': x = Math.max(10, x - horizontalStep); break;
+          case 'right': x = Math.min(90, x + horizontalStep); break;
         }
         
         const newCapas = [...prevCapas];
@@ -501,22 +505,34 @@ function Personalizar() {
         <div className="md:col-span-6 flex flex-col items-center order-1 md:order-2">
           
           {/* Selector de Vista 3D */}
-          <div className="flex space-x-2 mb-4">
+          <div className="flex space-x-2 mb-4 overflow-x-auto w-full pb-2 px-1 justify-center no-scrollbar">
              <button 
                onClick={() => setVista('frente')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${vista === 'frente' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'frente' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
                Frente
              </button>
              <button 
                onClick={() => setVista('espalda')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${vista === 'espalda' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'espalda' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
                Espalda
              </button>
              <button 
+               onClick={() => setVista('hombro_der')}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'hombro_der' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+             >
+               Hombro Der.
+             </button>
+             <button 
+               onClick={() => setVista('hombro_izq')}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'hombro_izq' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+             >
+               Hombro Izq.
+             </button>
+             <button 
                onClick={() => setVista('manga')}
-               className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${vista === 'manga' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+               className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${vista === 'manga' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
              >
                Manga
              </button>
@@ -527,8 +543,11 @@ function Personalizar() {
              <motion.div
                 className="relative w-full h-full flex items-center justify-center"
                 animate={{ 
-                  rotateY: vista === 'espalda' ? 180 : 0,
-                  scale: vista === 'manga' ? 1.5 : 1
+                  rotateY: vista === 'espalda' ? 180 : 
+                           vista === 'hombro_der' ? -25 :
+                           vista === 'hombro_izq' ? 25 : 0,
+                  scale: vista === 'manga' ? 1.5 : 
+                         (vista === 'hombro_der' || vista === 'hombro_izq') ? 1.2 : 1
                 }}
                 transition={{ duration: 0.6, type: "spring" }}
                 style={{ transformStyle: "preserve-3d" }}
