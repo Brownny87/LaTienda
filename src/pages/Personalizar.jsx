@@ -280,10 +280,15 @@ function Personalizar() {
   };
 
   const getImagenBase = () => {
+    let suffix = '';
+    if (vista === 'espalda') suffix = '-espalda';
+    else if (vista === 'manga_der') suffix = '-manga-der';
+    else if (vista === 'manga_izq') suffix = '-manga-izq';
+
     if (color !== "blanco" && color !== "negro") {
-        return `/LaTienda/Img-Bases/${tipo}-blanco.png`;
+        return `/LaTienda/Img-Bases/${tipo}-blanco${suffix}.png`;
     }
-    return `/LaTienda/Img-Bases/${tipo}-${color}.png`;
+    return `/LaTienda/Img-Bases/${tipo}-${color}${suffix}.png`;
   };
 
   // Obtener propiedades de la capa seleccionada para los controles
